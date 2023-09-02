@@ -45,7 +45,9 @@ defaultEditor() {
     log defaultEditor $editor
 
     if command -v sudo &> /dev/null; then
-
+        sudo update-alternatives --set editor /usr/bin/vim
+    else
+        update-alternatives --set editor /usr/bin/vim
     fi
 }
 
