@@ -57,8 +57,6 @@ defaultEditor() {
 
     if command -v apt &> /dev/null; then
         sudo update-alternatives --set editor /usr/bin/vim.basic
-    else
-        update-alternatives --set editor /usr/bin/vim.basic
     fi
 
 
