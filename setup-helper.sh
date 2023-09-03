@@ -31,13 +31,24 @@ package() {
 passwordlessSudo() {
     log passwordlessSudo
 
-    if ! sudo grep -q '%sudo ALL=(ALL) NOPASSWD:ALL' /etc/sudoers.d/nopasswd; then
-        echo "%sudo ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/nopasswd
+    if command -v apt &> /dev/null; then
+        if ! sudo grep -q '%sudo ALL=(ALL) NOPASSWD:ALL' /etc/sudoers.d/nopasswd; then
+            echo "%sudo ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/nopasswd
+        fi
+
+        if ! groups "$(whoami)" | grep -q '\bsudo\b'; then
+            sudo usermod -aG sudo "$(whoami)"
+        fi
+    elif command -v dnf &> /dev/null; then
+        if ! sudo grep -q '%sudo ALL=(ALL) NOPASSWD:ALL' /etc/sudoers.d/nopasswd; then
+            echo "%wheel ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/nopasswd
+        fi
+
+        if ! groups "$(whoami)" | grep -q '\bsudo\b'; then
+            sudo usermod -aG wheel "$(whoami)"
+        fi
     fi
 
-    if ! groups "$(whoami)" | grep -q '\bsudo\b'; then
-        sudo usermod -aG sudo "$(whoami)"
-    fi
 }
 
 defaultEditor() {
