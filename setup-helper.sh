@@ -2,6 +2,12 @@
 
 set -euo pipefail
 
+CMD_SUDO=''
+
+if command -v sudo &> /dev/null; then
+    CMD_SUDO='sudo '
+fi
+
 log() {
     msg="$*"
     printf "\e[1;34m  %s   %s\e[0m" '****' $msg
@@ -11,21 +17,13 @@ log() {
 package() {
     packages=$*
     log package $packages
-    if command -v sudo &> /dev/null; then
-        if command -v apt &> /dev/null; then
-            sudo apt install -y $packages
-        fi
-        if command -v dnf &> /dev/null; then
-            sudo dnf install -y $packages
-        fi
-    else
-        if command -v apt &> /dev/null; then
-            apt install -y $packages
-        fi
-        if command -v dnf &> /dev/null; then
-            dnf install -y $packages
-        fi
+    if command -v apt &> /dev/null; then
+        $CMD_SUDO apt install -y $packages
     fi
+    if command -v dnf &> /dev/null; then
+        $CMD_SUDO dnf install -y $packages
+    fi
+
 }
 
 passwordlessSudo() {
@@ -56,18 +54,11 @@ defaultEditor() {
     log defaultEditor $editor
 
     if command -v apt &> /dev/null; then
-        sudo update-alternatives --set editor /usr/bin/vim.basic
+        $CMD_SUDO update-alternatives --set editor /usr/bin/vim.basic
     fi
 
-
-    if command -v sudo &> /dev/null; then
-        if command -v dnf &> /dev/null; then
-            sudo dnf install -y --allowerasing vim-default-editor
-        fi
-    else
-        if command -v dnf &> /dev/null; then
-            dnf install -y --allowerasing vim-default-editor
-        fi
+    if command -v dnf &> /dev/null; then
+        $CMD_SUDO dnf install -y --allowerasing vim-default-editor
     fi
 }
 
