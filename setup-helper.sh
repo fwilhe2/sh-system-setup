@@ -44,15 +44,25 @@ defaultEditor() {
     editor=$1
     log defaultEditor $editor
 
-    if command -v sudo &> /dev/null; then
-        sudo update-alternatives --set editor /usr/bin/vim
+    if command -v apt &> /dev/null; then
+        sudo update-alternatives --set editor /usr/bin/vim.basic
     else
-        update-alternatives --set editor /usr/bin/vim
+        update-alternatives --set editor /usr/bin/vim.basic
+    fi
+
+
+    if command -v sudo &> /dev/null; then
+        if command -v dnf &> /dev/null; then
+            sudo dnf install -y vim-default-editor
+        fi
+    else
+        if command -v dnf &> /dev/null; then
+            dnf install -y vim-default-editor
+        fi
     fi
 }
 
 userShell() {
     shell=$1
     log userShell $shell
-
 }
