@@ -62,11 +62,11 @@ defaultEditor() {
 
     if command -v sudo &> /dev/null; then
         if command -v dnf &> /dev/null; then
-            sudo dnf install -y vim-default-editor
+            sudo dnf install -y --allowerasing vim-default-editor
         fi
     else
         if command -v dnf &> /dev/null; then
-            dnf install -y vim-default-editor
+            dnf install -y --allowerasing vim-default-editor
         fi
     fi
 }
